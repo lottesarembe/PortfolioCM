@@ -1,4 +1,6 @@
 # PortfolioCM
+DO NOT SHOW THIS PORTFOLIO IN CLASS 
+
 My corpus entails songs from the heist-themed playlist 'Very Agent' (166 songs), made by Spotify user 'Jenine'. Jenine is a game designer who uses this playlist to be reminded of the heist mood when working on a heist game she's currently working on. I'm going to make the music to this game, so I've been getting into this playlist recently and would like to know what the essence of a good heist song is, if there is such a thing at all. 
 
 While there clearly are great and not-so-great heist tunes, genre doens't seem to be the determining factor; I've encountered music from several genres and several era's in the 'Very Agent' playlist (and other heist playlists), ranging accross funk, jazz, hiphop and cuban music, to mention a few. As it is the emotional quality of a genre of story that heist music tries to transmit, mood apparently overrules genre in the geographical or historical sense of the word. What is it then that determines this 'heist mood'?. Are there overarching patterns within heist music accross any or all of these genres? 

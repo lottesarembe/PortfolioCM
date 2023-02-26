@@ -1,0 +1,140 @@
+---
+title: "Untitled"
+author: "Lotte Sarembe"
+date: 'february 2023'
+output: 
+  flexdashboard::flex_dashboard:
+    storyboard: true
+    theme: default
+---
+
+```{r}
+library(flexdashboard)
+library(tidyverse)
+library(spotifyr)
+library(remotes)
+library(compmus)
+```
+
+### Welcome to my Portfolio for Computational Musicology 2023 
+
+```{r}
+
+```
+***
+DO NOT SHOW THIS PORTFOLIO IN CLASS 
+
+Introduction:
+In my corpus I've chosen to compare two playlists that are matched to the specific song Station Atlantis. I released that song on Spotify last November. Many artist use the promotional tool of making a matching playlist to a song that they plan to release, and then add the song to the playlist, that by then ideally has gained some followers, on the release date. Spotify also makes playlists that are matched to a specific song called Radio's. This leaves us with two playlists: Café Atlatis, which was made by the person that wrote the song in question, and Radio Station Atlantis which was made by with the Spotify algorhithm. This ultimately can contribute to a number of fun questions, such as: does the A.I. know the artist better than (s)he knows him/herself? Does human intuition in playlist making differ from the choices that the algorhithm make in playlist making? These questions can ideally be explored with much more material; since making a playlist for your own song is a widespread promotional tool, there are many of these playlists to be found accross genres. 
+
+One problem with this choice of corpus is that the Spotify Song Radio's are customized to your personal taste based on the listening history of your Spotify account. This creates a problem for my data because that already cause the material in Radio Station Atlantis to be closer to the material in Café Atlantis, as both are now adapted to my taste. My solution to this was to load a playlist from a new Spotify account (without a listening history). However, I would like to find a better solution to this eventually, or slightly alter the setup of my analysis. 
+
+### Who knows the song best; the artist or the A.I.? Let's plot. 
+
+```{r}
+#install&load package: spotifyr, tidyverse, remotes, usethis 
+#packages: spotifyr, tidyverse, usethis, remotes 
+library(spotifyr)
+library(tidyverse)
+library(usethis)
+library(remotes)
+library(ggplot2)
+library(viridis)
+
+devtools::install_github('charlie86/spotifyr')
+usethis::edit_r_environ()
+
+atlantis_café <-get_playlist_audio_features("", "5lb75BV67uNts6pHB5k4wI")
+atlantis_radio <- get_playlist_audio_features("", "37i9dQZF1E8KLo1SEc7nW4")
+
+atlantis_combined <- 
+  bind_rows(
+    atlantis_café |> mutate(category = "Café Atlantis"),
+    atlantis_radio |> mutate(category = "Radio Atlantis")
+  )
+
+ggplot(
+ atlantis_combined,
+  aes(
+    x=track.popularity,
+    y=valence,
+    group = 1
+    )
+   ) + # research "group error"
+geom_boxplot() +
+facet_wrap(~category, strip.position = "bottom")+
+labs(x="Track Popularity",y ="Valence")+
+  theme_classic()+
+  labs(title = "Station Atlantis themed playlists")+
+  geom_text(aes(label = track.name, color = energy), size= 1.5, alpha = 0.6)+ 
+  annotate(
+    "curve",
+    x = 15, y = 0.05,
+    xend = 4, yend = 0.16,
+    arrow = arrow(length = unit(0.2, "cm"), type = "closed"),
+    color = "red")+
+  scale_color_viridis(option = "D")+
+  theme(axis.line.y = element_blank(),
+        axis.line.x = element_blank(),
+        axis.text = element_text(size = 7),
+        plot.title = element_text(size = 10),
+        axis.title = element_text(size = 9),
+        strip.background = element_blank(),
+        strip.text = element_text(size=8))
+
+
+#goals: change font of titles // make names less overlapping // don't have names cut off by edge // add text to arrow  
+
+```
+
+*** 
+In the boxplot on your left you can see "Café Atlantis" (playlist by the artist) and Radio Atlantis (playlist by the Spotify algorhithm) compared on the parameters of valence ( the 'positiveness' conveyed by the track, 1.00 being the positive and 0.00 the negative extreme of the spectrum) and track popularity (how popular the individual tracks in the playlist are in general, so not how often they are played in this particular playlist, but in total everywhere). Colour is mapped onto energy, meaning that very high energy songs are yellow, and very low energy songs are dark green (as shown in the legend). You can see that most songs are somewhere in the middle of this range, and there are more extremes on the low end than on the high end of this spectrum. The red arrow points to the song Station Atlantis, the song that was the guideline for both playlists.  
+
+I found it interesting to see that although the valence in both playlists is quite similar, the range of the track popularity is much wider in Café Atlantis that in Radio Atlantis. This might be because the algorhithm included the demographic that Station Atlantis came from a starting-out, unknown artist and therefore included other starting-out artists (perhaps also from the Netherlands particularly) in the Radio, whereas I as an artist included both my heroes (often very famous artists) and my friends (not very famous) in the playlist, causing a much wider range. 
+
+NOTES: 
+1. knit
+2. git commit (on your own machine )
+3. git push (sends it to github)
+
+
+
+### Chromogram 
+
+```{r}
+Atlantis <-
+  get_tidy_audio_analysis("3fAGlTMqynVrgXrZwqNMcv") |>
+  select(segments) |>
+  unnest(segments) |>
+  select(start, duration, pitches)#importing URI Station Atlantis
+
+
+Atlantis |>
+  mutate(pitches = map(pitches, compmus_normalise, "manhattan")) |>
+  compmus_gather_chroma() |> #choose norm, try all three
+  ggplot(
+    aes(
+      x = start + duration / 2,
+      width = duration,
+      y = pitch_class,
+      fill = value
+    )
+  ) +
+  geom_tile() +
+  labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
+  theme_minimal() +
+  scale_fill_viridis_c()
+```
+
+***
+On the left you can see a chromagram of the song Station Atlantis. Since this song was the starting point for both playlist under investigation, I thought it would be interesting to have a closer look at it. 
+### TAB
+
+```{r}
+#code chunk to make a graphic  
+```
+
+***
+text
+
+
